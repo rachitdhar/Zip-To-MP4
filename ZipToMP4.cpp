@@ -26,9 +26,8 @@ string detectFileType(const vector<unsigned char>& data) {
         }
     }
     // Unknown file type
-    //throw new exception("File extension could not be handled.");
     cerr << "Error: File extension could not be handled." << endl;
-    return "";
+    exit(1);
 }
 
 
@@ -36,13 +35,13 @@ void generateBinaryFile(const string& inputFilePath, const string& binaryFilePat
     ifstream inputFile(inputFilePath, ios::binary);
     if (!inputFile) {
         cerr << "Error: Could not open input file: " << inputFilePath << endl;
-        return;
+        exit(1);
     }
 
     ofstream binaryFile(binaryFilePath, ios::binary);
     if (!binaryFile) {
         cerr << "Error: Could not create binary file: " << binaryFilePath << endl;
-        return;
+        exit(1);
     }
 
     // Read contents from input file and write to binary file
@@ -59,14 +58,14 @@ void generateMP4FromBinary(const string& binaryFilePath, const string& videoFile
     ifstream binaryFile(binaryFilePath, ios::binary);
     if (!binaryFile) {
         cerr << "Error: Could not open binary file: " << binaryFilePath << endl;
-        return;
+        exit(1);
     }
 
     // Create the video file (.mp4)
     ofstream videoFile(videoFilePath, ios::binary);
     if (!videoFile) {
         cerr << "Error: Could not create video file: " << videoFilePath << endl;
-        return;
+        exit(1);
     }
 
     vector<unsigned char> mp4Signature = { 0x00, 0x00, 0x00, 0x18, 0x66, 0x74, 0x79, 0x70 };
@@ -88,7 +87,7 @@ void regenerateBinaryFileFromMP4(const string& videoFilePath, const string& outp
     ifstream videoFile(videoFilePath, ios::binary);
     if (!videoFile) {
         cerr << "Error: Could not open video file: " << videoFilePath << endl;
-        return;
+        exit(1);
     }
 
     // Remove mp4 signature
@@ -99,7 +98,7 @@ void regenerateBinaryFileFromMP4(const string& videoFilePath, const string& outp
     ofstream binaryFile(outputBinaryFilePath, ios::binary);
     if (!binaryFile) {
         cerr << "Error: Could not create binary file: " << outputBinaryFilePath << endl;
-        return;
+        exit(1);
     }
 
     // Write the remaining contents of the video file to the binary file
@@ -116,7 +115,7 @@ void regenerateOriginalFileFromBinary(const string& binaryFilePath, const string
     ifstream binaryFile(binaryFilePath, ios::binary);
     if (!binaryFile) {
         cerr << "Error: Could not open binary file: " << binaryFilePath << endl;
-        return;
+        exit(1);
     }
 
     // Read the first 8 bytes to detect file type
@@ -127,7 +126,7 @@ void regenerateOriginalFileFromBinary(const string& binaryFilePath, const string
     string extension = detectFileType(header);
     if (extension.empty()) {
         cerr << "Error: Unknown file type, cannot determine extension." << endl;
-        return;
+        exit(1);
     }
 
     // Create the output file with the detected extension
@@ -135,7 +134,7 @@ void regenerateOriginalFileFromBinary(const string& binaryFilePath, const string
     ofstream outputFile(outputFileName, ios::binary);
     if (!outputFile) {
         cerr << "Error: Could not create output file: " << outputFileName << endl;
-        return;
+        exit(1);
     }
 
     // Write the header to the output file
